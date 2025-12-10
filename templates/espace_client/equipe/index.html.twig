@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Site - Liste{% endblock %}
+
+{% block block_css %}
+    {% include '_datatable_init.html.twig' %}
+    <style>
+        .btn-icon {
+            margin-right: 5px;
+        }
+        #datatable-basic_filter {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div  class="row mt-4">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom: none">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12">
+                            <div class="card-title">
+                                <h3>Equipe</h3>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="datatable-basic" class="table table-striped-danger text-nowrap w-100">
+                            <thead>
+                            <tr>
+                                <th class="large-col text-start">Nom</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for equipe in equipes %}
+                                <tr>
+                                    <td>{{ equipe.eqpNom|default('-') }}</td>
+                                  
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block block_js %}
+   
+
+    <script>
+        $(function () {
+            var dataTable = $('#datatable-basic').DataTable({
+                "ordering": true,
+                "language": {
+                    "sProcessing": "Traitement en cours...",
+                    "sLengthMenu": "Afficher _MENU_ éléments",
+                    "sZeroRecords": "Aucun élément trouvé",
+                    "sInfo": "Afficher de _START_ à _END_ sur _TOTAL_ lignes",
+                    "sInfoEmpty": "",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+                    "sSearch": "Rechercher :",
+                    "oPaginate": {
+                        "sFirst": "Premier",
+                        "sPrevious": "Précédent",
+                        "sNext": "Suivant",
+                        "sLast": "Dernier"
+                    }
+                },
+                "pageLength": 10,
+                "lengthChange": true,
+                "dom": '<"top"<"row"<"col-md-6 d-flex align-items-center"<B>><"col-md-6 d-flex align-items-center justify-content-end"f>>>rt<"bottom d-flex justify-content-between mt-3 mb-2"<"d-flex align-items-center"i><"d-flex align-items-center"l><"d-flex align-items-center"p>>',
+                "buttons": [
+                    {
+                        extend: 'colvis',
+                        text: '<i class="ri-layout-left-line text-gray-5 fs-5"></i>',
+                        className: 'btn btn-light btn-wave waves-effect waves-light border border-dark'
+                    },
+                    {
+                        text: '<i class="ri-add-line text-gray-5 fs-5"></i>',
+                        className: 'btn  btn-light btn-wave waves-effect waves-light border border-dark ',
+                        action: function () {
+                            window.location.href = "{{ path('app_site_new') }}";
+                        },
+                        init: function (api, node, config) {
+                        }
+                    }
+                ],
+                "initComplete": function () {
+                    $('.dt-button').removeClass('dt-button');
+                }
+            });
+
+            $(document).on('click', '.buttons-colvis', function () {
+                setTimeout(function () {
+                    let menu = $('.dt-button-collection');
+                    if (menu.length) {
+                        menu.css({
+                            'border': '1px solid #ddd',
+                            'border-radius': '4px',
+                            'min-width': '200px',
+                            'padding': '10px'
+                        });
+                        menu.find('button').each(function () {
+                            $(this)
+                                .removeClass('dt-button')
+                                .addClass('dropdown-item')
+                                .css({
+                                    'text-align': 'left',
+                                    'padding': '5px 10px',
+                                    'margin-bottom': '5px',
+                                    'width': '100%',
+                                    'background': 'none',
+                                    'border': 'none'
+                                });
+                        });
+                    }
+                }, 50);
+            });
+
+            saveColvisCheck(dataTable, "tb_site");
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const formSearch = document.getElementById('__form_search');
+                const selectEActif = document.getElementById('__eActif');
+                const inputSearch = document.getElementById('__search');
+                const inputSearchDataTable = document.querySelector('input[aria-controls="datatable-basic"]');
+
+                function sendSearch() {
+                    inputSearch.value = "";
+                    formSearch.submit();
+                }
+
+                if (inputSearchDataTable) {
+                    inputSearch.addEventListener('keyup', function () {
+                        inputSearchDataTable.value = inputSearch.value;
+                        const event = new Event('input', {
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        inputSearchDataTable.dispatchEvent(event);
+                    });
+                }
+
+                selectEActif.addEventListener('change', function () {
+                    sendSearch();
+                });
+            }, 2);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+
+             deleteButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const idSite = this.getAttribute('data-id');
+                    const deleteUrl = "{{ path('app_site_delete', {'id': 'idSite'}) }}";
+                    const finalUrl = deleteUrl.replace('idSite', idSite);
+
+                    console.log(finalUrl);
+                   
+                    confirmDeleteButton.href = finalUrl;
+                  
+                     
+                });
+            }); 
+        });
+    </script>
+   
+{% endblock %}

@@ -1,0 +1,107 @@
+{% macro renderInformation(datecreation, datemodif, userIdCreation, userIdModif) %}
+    <a href="#"
+       data-bs-toggle="tooltip"
+       data-bs-placement="bottom"
+       data-bs-html="true"
+       data-bs-title="infoTooltipContent"
+       class="info-button" id="tooltipInformations">
+        <div id="" class="">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_2034_3573)">
+                    <path d="M10.9999 20.1673C16.0625 20.1673 20.1666 16.0633 20.1666 11.0007C20.1666 5.93804 16.0625 1.83398 10.9999 1.83398C5.93731 1.83398 1.83325 5.93804 1.83325 11.0007C1.83325 16.0633 5.93731 20.1673 10.9999 20.1673Z"
+                          stroke="#316094" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M11 14.6667V11" stroke="#316094"
+                          stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M11 7.33398H11.0092" stroke="#316094"
+                          stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </g>
+                <defs>
+                    <clipPath id="clip0_2034_3573">
+                        <rect width="22" height="22" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+        </div>
+    </a>
+
+    <div id="infoTooltipContent" style="display: none;">
+        <div class="container px-0" id="information">
+            <div class="section">
+                <div class="p-2">
+                    <div class="row">
+                        <div class="col-5 text-center">
+                            <h6 class="">Créé par</h6>
+                            <hr class="my-1" style="border-color: #ccc !important;">
+                            <div class="">
+                                {% set userAfficher = "admin" %}
+
+                                {% if userIdCreation and userIdCreation != 0 %}
+                                    {% set userCreation = __userService.userBuId(userIdCreation) %}
+
+                                    {% set userAfficher = userCreation.nomComplet|default('') %}
+                                {% endif %}
+                                {{ userAfficher }} &nbsp;
+                            </div>
+                            <div class="text-gray">
+                                <div class="date">
+                                    <i class="ri-calendar-line me-2 fs-6"></i>
+                                    {% if datecreation|default(null) %}
+                                        <span class="_convert_date">{{ datecreation|date('c') }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                                <div class="time">
+                                    <i class="ri-time-line me-2 fs-6"></i>
+                                    {% if datecreation|default(null) %}
+                                        <span class="_convert_time">{{ datecreation|date('c') }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center justify-content-center">
+                            <div class="" style=" width: 1px; height: 90%; background-color: #ccc;"></div>
+                        </div>
+                        <div class="col-5 text-center">
+                            <h6 class="">Modifié par</h6>
+                            <hr class="my-1" style="border-color: #ccc !important;">
+                            <div class="">
+                                {% set userModifAfficher = "-" %}
+                                {% if userIdModif and userIdModif != 0 %}
+                                    {% set userModif = __userService.userBuId(userIdModif) %}
+
+                                    {% set userModifAfficher = userModif.nomComplet|default('') %}
+                                {% endif %}
+                                {{ userModifAfficher }} &nbsp;
+                            </div>
+                            <div class="text-gray">
+                                <div class="date">
+                                    <i class="ri-calendar-line me-2 fs-6"></i>
+                                    {% if datemodif|default(null) %}
+                                        <span class="_convert_date">{{ datemodif|date('c') }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                                <div class="time">
+                                    <i class="ri-time-line me-2 fs-6"></i>
+                                    {% if datemodif|default(null) %}
+                                        <span class="_convert_time">{{ datemodif|date('c') }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

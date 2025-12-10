@@ -1,0 +1,21 @@
+<script src="{{ asset('assets_template/js/show-password.js') }}"></script>
+<!-- Changement label form-check - Form -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const switchInput = document.getElementById('{{ form.estActif.vars.id }}');
+
+        const label = document.getElementById('estActifLabel');
+
+        function updateLabel() {
+            label.textContent = switchInput.checked
+                ? "Actif"
+                : "Inactif";
+        }
+
+        // Mise à jour immédiate
+        updateLabel();
+
+        // Mise à jour lors du changement
+        switchInput.addEventListener('change', updateLabel);
+    });
+</script>

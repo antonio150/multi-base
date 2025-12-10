@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+    {{ isView ? 'Voir Site' : (site.id ? 'Modifier Site' : 'Nouveau Site') }}
+{% endblock %}
+
+{% block block_css %}
+    <style>
+        .custom-form-control {
+            height: 38.39px;
+            appearance: auto !important;
+        }
+        
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="row mt-4">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom: none">
+                    <div class="row align-items-center mt-2">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center justify-content-start gap-3">
+                                <h3 class="mb-0">Site</h3>
+                               
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+							<div class="d-flex align-items-center flex-wrap justify-content-end">
+								<div class="custom-toggle-switch toggle-sm ms-2">
+                                    {{ form_widget(form.estActif, {
+                                            'label' : false,
+                                            'attr': {
+                                                'class': 'form-check-input', 
+                                                'disabled': isView ? true : false 
+                                            }
+                                        }) }}
+
+                                        <label for="{{ form.estActif.vars.id }}" id="sitActifLabel" class="label-primary"></label>
+                                </div>
+                                <div><label class="text-muted m-0" id="sitActifStatus" for="{{ form.estActif.vars.id }}">Actif</label></div>
+							</div>
+						</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        {{ form_label(form.sitRaisonsociale, 'Raison sociale', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitRaisonsociale, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitRaisonsociale) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.sitAdresse, 'Adresse', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitAdresse, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitAdresse) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.sitTel, 'Téléphone', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitTel, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitTel) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.sitMail, 'Email', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitMail, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitMail) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.sitCode, 'Code', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitCode, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitCode) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_label(form.sitBddNom, 'Nom DB', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitBddNom, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitBddNom) }}
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        {{ form_label(form.sitBddUser, 'Utilisateur DB', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitBddUser, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitBddUser) }}
+                                    </div>
+
+                                    <div class="col-md-3 mb-3">
+                                        {{ form_label(form.sitBddMdp, 'Mot de passe DB', {'label_attr': {'class': 'mb-2'}}) }}
+                                        {{ form_widget(form.sitBddMdp, {'attr': {'class': 'form-control custom-form-control', 'disabled': isView ? true : false}}) }}
+                                        {{ form_errors(form.sitBddMdp) }}
+                                    </div>
+
+                                   
+                                </div>
+                            </div>
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
+                <div>
+                    <a href="{{ path('app_site_index') }}" class="btn btn-warning btn-wave">Annuler</a>
+                </div>
+                <div>
+                    <button type="submit" {% if isView %}disabled{% endif %} class="btn btn-primary btn-wave _btn_submit">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block block_js %}
+    {% include 'script/_form.html.twig' %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sitActifSwitch = document.getElementById('{{ form.estActif.vars.id }}');
+            const sitActifLabel = document.getElementById('sitActifLabel');
+            const sitActifStatus = document.getElementById('sitActifStatus');
+
+            if (sitActifSwitch && sitActifStatus) {
+                sitActifStatus.textContent = sitActifSwitch.checked ? 'Inactif' : 'Actif';
+                sitActifSwitch.addEventListener('change', function () {
+                    sitActifStatus.textContent = this.checked ? 'Inactif' : 'Actif';
+                });
+            }
+        });
+    </script>
+{% endblock %}

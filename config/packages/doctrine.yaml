@@ -1,0 +1,19 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL_MAIN)%'
+            dynamic:
+                url: '%env(resolve:DATABASE_URL_DYNAMIC)%'
+    orm:
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    Main: { is_bundle: false, type: attribute, dir: '%kernel.project_dir%/src/Entity/Main', prefix: App\Entity\Main, alias: Main }
+            dynamic:
+                connection: dynamic
+                mappings:
+                    Dynamic: { is_bundle: false, type: attribute, dir: '%kernel.project_dir%/src/Entity/Dynamic', prefix: App\Entity\Dynamic, alias: Dynamic }

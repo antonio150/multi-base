@@ -1,0 +1,23 @@
+{% block block_css %}
+    <style>
+        .custom-btn-modal{
+            padding: 8px;
+            width: 90px;
+        }
+</style>
+{% endblock %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content pt-3 pb-3">
+            <div class="modal-body">
+                <div class="text-center">
+                    <h5 class="lh-base">Êtes-vous sûr de vouloir récupérer cet élément ?</h5>
+                </div>
+            </div>
+            <div class="text-center pt-3 pb-3">
+                <button type="button" class="btn btn-warning custom-btn-modal me-2" data-bs-dismiss="modal">Annuler </button>
+                <a href="#" id="confirmDeleteButton" class="btn btn-primary custom-btn-modal">Confirmer</a>
+            </div>
+        </div>
+    </div>
+</div>

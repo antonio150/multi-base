@@ -1,0 +1,250 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Site - Liste{% endblock %}
+
+{% block block_css %}
+   
+    <style>
+        .btn-icon {
+            margin-right: 5px;
+        }
+        #datatable-basic_filter {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    
+
+    <div  class="row mt-4">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom: none">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12">
+                            <div class="card-title">
+                                <h3>Site</h3>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{{path('app_site_new')}}"> ajouter</a>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12">
+							<form action="#" method="get" class="d-flex flex-md-row flex-sm-column flex-xs-column gap-2" id="__form_search">
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									{% set ___eActif = app.request.query.get('__eActif', 1) %}
+									<select class="form-select custom-form-control" name="__eActif" id="__eActif">
+										<option value="1" {% if ___eActif == "1" %} selected {% endif %}>
+											Actif
+										</option>
+										<option value="0" {% if ___eActif == "0" %} selected {% endif %}>
+											Inactif
+										</option>
+									</select>
+								</div>
+								<div class="col-md-9 col-sm-12 col-xs-12   mt-sm-2 mt-md-0 ps-md-0 ">
+									<div
+										class="header-search  d-md-block my-auto auto-complete-search">
+										<!-- Start::header-link -->
+										<input type="text" class="header-search-bar   form-control custom-form-control" placeholder="Recherche ..." spellcheck="false" autocomplete="off" autocapitalize="off" name="__search" id="__search" value="{{ app.request.query.get('__search', "") }}" style="">
+										<a href="javascript:void(0);" class="header-search-icon border-0">
+											<i class="ri-search-line"></i>
+										</a>
+										<!-- End::header-link -->
+									</div>
+								</div>
+							</form>
+						</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="datatable-basic" class="table table-striped-danger text-nowrap w-100">
+                            <thead>
+                            <tr>
+                                <th class="large-col text-start">Raison sociale</th>
+                                <th class="large-col text-start">Adresse</th>
+                                <th class="large-col text-start">Télephone</th>
+                                <th class="large-col text-start">Mail</th>
+                              
+                                <th width="10%" class="text-center custom-style-action">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for site in sites %}
+                                <tr>
+                                    <td>{{ site.sitRaisonsociale|default('-') }}</td>
+                                    <td>{{ site.sitAdresse|default('-') }}</td>
+                                    <td>{{ site.sitTel|default('-') }}</td>
+                                    <td>{{ site.sitMail|default('-') }}</td>
+                                    <td class="text-center">
+                                        
+                                        <a  href="{{ path('app_site_show', {'id': site.id}) }}"
+                                       
+                                           class="btn btn-icon btn-success-light rounded-pill btn-wave waves-effect waves-light btn-success-show">
+                                            <i class="ri-search-line"></i>
+                                        </a>
+                                        <a   href="{{ path('app_site_edit', {'id': site.id}) }}"
+                                           
+                                           class="btn btn-icon btn-primary-light rounded-pill btn-wave waves-effect waves-light btn-success-show">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                        <a 
+                                           
+                                            href="javascript:void(0)"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal"
+                                                data-id="{{ site.id }}"
+                                          
+                                           class="btn btn-icon btn-danger-light rounded-pill btn-wave waves-effect waves-light">
+                                            <i class="ri-delete-bin-6-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/_delete_modal.html.twig' %}
+
+{% endblock %}
+
+{% block block_js %}
+   
+
+    <script>
+        $(function () {
+            var dataTable = $('#datatable-basic').DataTable({
+                "ordering": true,
+                "language": {
+                    "sProcessing": "Traitement en cours...",
+                    "sLengthMenu": "Afficher _MENU_ éléments",
+                    "sZeroRecords": "Aucun élément trouvé",
+                    "sInfo": "Afficher de _START_ à _END_ sur _TOTAL_ lignes",
+                    "sInfoEmpty": "",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+                    "sSearch": "Rechercher :",
+                    "oPaginate": {
+                        "sFirst": "Premier",
+                        "sPrevious": "Précédent",
+                        "sNext": "Suivant",
+                        "sLast": "Dernier"
+                    }
+                },
+                "pageLength": 10,
+                "lengthChange": true,
+                "dom": '<"top"<"row"<"col-md-6 d-flex align-items-center"<B>><"col-md-6 d-flex align-items-center justify-content-end"f>>>rt<"bottom d-flex justify-content-between mt-3 mb-2"<"d-flex align-items-center"i><"d-flex align-items-center"l><"d-flex align-items-center"p>>',
+                "buttons": [
+                    {
+                        extend: 'colvis',
+                        text: '<i class="ri-layout-left-line text-gray-5 fs-5"></i>',
+                        className: 'btn btn-light btn-wave waves-effect waves-light border border-dark'
+                    },
+                    {
+                        text: '<i class="ri-add-line text-gray-5 fs-5"></i>',
+                        className: 'btn  btn-light btn-wave waves-effect waves-light border border-dark ',
+                        action: function () {
+                            window.location.href = "{{ path('app_site_new') }}";
+                        },
+                        init: function (api, node, config) {
+                        }
+                    }
+                ],
+                "initComplete": function () {
+                    $('.dt-button').removeClass('dt-button');
+                }
+            });
+
+            $(document).on('click', '.buttons-colvis', function () {
+                setTimeout(function () {
+                    let menu = $('.dt-button-collection');
+                    if (menu.length) {
+                        menu.css({
+                            'border': '1px solid #ddd',
+                            'border-radius': '4px',
+                            'min-width': '200px',
+                            'padding': '10px'
+                        });
+                        menu.find('button').each(function () {
+                            $(this)
+                                .removeClass('dt-button')
+                                .addClass('dropdown-item')
+                                .css({
+                                    'text-align': 'left',
+                                    'padding': '5px 10px',
+                                    'margin-bottom': '5px',
+                                    'width': '100%',
+                                    'background': 'none',
+                                    'border': 'none'
+                                });
+                        });
+                    }
+                }, 50);
+            });
+
+            saveColvisCheck(dataTable, "tb_site");
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const formSearch = document.getElementById('__form_search');
+                const selectEActif = document.getElementById('__eActif');
+                const inputSearch = document.getElementById('__search');
+                const inputSearchDataTable = document.querySelector('input[aria-controls="datatable-basic"]');
+
+                function sendSearch() {
+                    inputSearch.value = "";
+                    formSearch.submit();
+                }
+
+                if (inputSearchDataTable) {
+                    inputSearch.addEventListener('keyup', function () {
+                        inputSearchDataTable.value = inputSearch.value;
+                        const event = new Event('input', {
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        inputSearchDataTable.dispatchEvent(event);
+                    });
+                }
+
+                selectEActif.addEventListener('change', function () {
+                    sendSearch();
+                });
+            }, 2);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"]');
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+
+             deleteButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const idSite = this.getAttribute('data-id');
+                    const deleteUrl = "{{ path('app_site_delete', {'id': 'idSite'}) }}";
+                    const finalUrl = deleteUrl.replace('idSite', idSite);
+
+                    console.log(finalUrl);
+                   
+                    confirmDeleteButton.href = finalUrl;
+                  
+                     
+                });
+            }); 
+        });
+    </script>
+   
+{% endblock %}
