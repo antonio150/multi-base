@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+      data-menu-styles="dark" data-toggled="close">
+
+<head>
+
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Title -->
+    <title>{% block title %}Connexion{% endblock %} - Visiteur</title>
+
+    <script>
+        function initMenuColorLight() {
+            let localStorage = window.localStorage;
+            if (
+                localStorage.getItem('xintradarktheme') !== 'true'
+                && (!localStorage.getItem('xintraMenu') || localStorage.getItem('xintraMenu') !== 'dark')
+            ) {
+                localStorage.setItem('xintraMenu', 'light');
+            }
+        }
+
+        initMenuColorLight()
+    </script>
+
+    {% block block_css %}
+        <style>
+            .vertical-line {
+                width: 1px; /* Largeur de la ligne */
+                height: 80%; /* Hauteur de la ligne */
+                background-color: #ccc; /* Couleur de la ligne */
+            }
+
+            @media (min-width: 1200px) {
+                .container, .container-lg, .container-md, .container-sm, .container-xl {
+                    max-width: 865px;
+                }
+            }
+            .img-fluid {
+                max-width: 75%;
+                height: auto;
+            }
+        </style>
+        <style>
+            body {
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                min-height: 100vh;
+            }
+
+            .bg-gray-300 {
+                background-color: transparent !important; 
+            }
+
+            .bg-mode {
+                background-color: rgba(255, 255, 255, 0.95);
+            }
+        </style>
+
+    {% endblock %}
+
+</head>
+
+<body class="bg-gray-300">
+
+
+<!-- Loader -->
+
+<div class="page">
+    <!-- Start::app-content -->
+    <div>
+        <div class="container-fluid">
+
+            {% block body %}
+                <!-- ============================== Login Section ================== -->
+                <section class="py-5 bg-gray-300">
+                    <div class="container">
+
+                        <div class="row justify-content-center align-self-center align-items-center m-auto">
+                            <div class="col-12">
+                                <div class="bg-mode bg-white shadow rounded-3 overflow-hidden">
+                                    <div class="row g-0">
+                                        <!-- Colonne du logo -->
+                                        <div class="col-lg-5 text-center align-self-center">
+                                            <img src="{{ asset('img/logo.png') }}" class="img-fluid ms-5" alt="">
+                                        </div>
+
+                                        <!-- Ligne verticale -->
+                                        <div class="col-lg-1 d-flex align-items-center justify-content-center">
+                                            <div class="vertical-line"></div>
+                                        </div>
+
+                                        <!-- Information -->
+                                        <div class="col-lg-6 order-1">
+                                            <div class="p-3 p-sm-4 p-md-5">
+                                                <br>
+                                                <!-- Title -->
+                                                <h3 class="mb-2 fs-3 text-center">Se connecter</h3>
+
+                                                <!-- Form START -->
+                                                <form class="mt-4 text-start" id="formLogin" method="POST" action="{{ path('app_login_main') }}">
+                                                    {% set classError = "" %}
+                                                    {% if error %}
+                                                        {% set classError = "is-invalid" %}
+                                                        <div class="alert alert-danger">
+                                                            {% if error.messageKey == 'Invalid credentials.' %}
+                                                                Utilisateur ou mot de passe incorrect
+                                                            {% else %}
+                                                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="form-group mb-4">
+                                                        <label>Utilisateur <span class="text-danger">*</span></label>
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{ last_username }}" 
+                                                            name="_username"
+                                                            id="inputUsername" 
+                                                            class="form-control mt-2 {{ classError }}"
+                                                            required autofocus
+                                                        >
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label>Site code (optionnel) <span class="text-muted">(sitCode)</span></label>
+                                                        <input
+                                                            type="text"
+                                                            name="sitCode"
+                                                            id="sitCode"
+                                                            class="form-control mt-2"
+                                                            placeholder="Entrez le code du site pour espace client"
+                                                        >
+                                                    </div>
+                                                    <div class="form-group mb-1">
+                                                        <div class="d-flex justify-content-between">
+                                                            <label>
+                                                                Mot de passe
+                                                                <span class="text-danger">*</span>
+                                                            </label>
+                                                          
+                                                        </div>
+                                                        <div class="position-relative">
+                                                            <input type="password" class="form-control mt-2 mb-2 {{ classError }}"
+                                                                   name="_password"
+                                                                   id="password-field" placeholder="Password"
+                                                                   autocomplete="current-password" required="">
+                                                            <a href="javascript:void(0);"
+                                                               class="show-password-button text-muted"
+                                                               onclick="createpassword('password-field',this)"
+                                                               id="button-addon2">
+                                                                <i class="ri-eye-off-line align-middle"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check form-check-inline mb-4">
+                                                        <input class="form-check-input" type="checkbox"
+                                                               id="savepassword" value="option1">
+                                                        <label class="form-check-label" for="savepassword">
+                                                            Se souvenir de moi
+                                                        </label>
+                                                    </div>
+                                                    <input type="hidden" name="_csrf_token"
+                                                           value="{{ csrf_token('authenticate') }}"
+                                                    >
+                                                    <div class="d-grid gap-2 mb-4">
+                                                        <button type="submit"
+                                                                class="btn btn-primary btn-wave font--bold btn-lg">
+                                                            Se connecter
+                                                        </button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                            <!-- Form END -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% endblock %}
+
+        </div>
+    </div>
+    <!-- End::app-content -->
+
+</div>
+
+{% block block_js %}{% endblock %}
+
+<script>
+    const form_login = document.getElementById("formLogin");
+    const input_login = document.getElementById("inputUsername");
+    const input_mdp = document.getElementById("password-field");
+    const check_remember = document.getElementById("savepassword");
+    const input_sitcode = document.getElementById("sitCode");
+
+    function saveStorageLogin(username, password) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+    }
+
+    function removeStorageLogin() {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+    }
+
+    function setLoginForm(){
+        if(localStorage.getItem("username") && localStorage.getItem("password")){
+            input_login.value = localStorage.getItem("username");
+            input_mdp.value = localStorage.getItem("password");
+            check_remember.checked = true;
+        }
+    }
+
+    form_login.addEventListener("submit", function (e) {
+        // Avant soumission, définir l'URL d'action selon sitCode
+        if (input_sitcode && input_sitcode.value.trim() !== "") {
+            form_login.action = "{{ path('app_login_dynamic') }}";
+        } else {
+            form_login.action = "{{ path('app_login_main') }}";
+        }
+
+        if(check_remember.checked === true){
+            saveStorageLogin(input_login.value, input_mdp.value);
+        }else{
+            removeStorageLogin();
+        }
+        // laisser la soumission continuer normalement
+    });
+
+    setLoginForm();
+</script>
+
+</body>
+
+</html>
