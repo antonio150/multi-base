@@ -75,11 +75,16 @@ class UserDynamicAuthenticator extends AbstractAuthenticator
          $this->databaseSwitcher->switchDatabase($databasename);
         $entityManager = $this->dynamicEntityManagerProvider->getEntityManager();
 
-        $entityManager->getRepository(User::class)->findOneBy(['userLogin' => $username]);
-
+        $usernameLog=$entityManager->getRepository(User::class)->findOneBy(['userLogin' => $username]);
+ 
         return new Passport(
             new UserBadge($username, function ($userIdentifier) use ($entityManager) {
-                return $entityManager->getRepository(User::class)->findOneBy(['userLogin' => $userIdentifier]);
+                
+                $utilisateurLogin = $entityManager->getRepository(User::class)->findOneBy(['userLogin' => $userIdentifier]);
+                // dump($userIdentifier);
+                // dump($utilisateurLogin);
+                // die;
+                return $utilisateurLogin;
             }),
             new PasswordCredentials($password)
         );
@@ -88,6 +93,7 @@ class UserDynamicAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     { 
         $user = $token->getUser();
+        dd("copucou");
 
         $data = null;
         $contentType = $request->headers->get('Content-Type') ?? '';
